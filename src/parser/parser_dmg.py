@@ -44,7 +44,8 @@ def generate_dataframe_DMG():
     return df_dmg
 
 
-
+if __name__ == "__main__":
+    generate_dataframe_DMG()
 
 
 

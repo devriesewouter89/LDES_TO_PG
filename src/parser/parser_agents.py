@@ -28,4 +28,6 @@ def generate_dataframe_AGENTS():
 
     return df_agents
 
-generate_dataframe_AGENTS()
+
+if __name__ == "__main__":
+    generate_dataframe_AGENTS()

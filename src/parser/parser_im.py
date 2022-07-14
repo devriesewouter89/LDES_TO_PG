@@ -2,6 +2,7 @@
 
 from src.utils.utils import *
 import json
+import pandas as pd
 
 def generate_dataframe_im():
     df_im = pd.DataFrame(generate_dataframe("IM"))

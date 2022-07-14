@@ -16,6 +16,22 @@ Available collections:
 |AGENTS | agent list|
 |EXHIBITIONS|list of exhibitions (restricted to Design Museum Gent )|
 
+## installation
+
+### python environment
+
+`pip install -r requirements.txt`
+
+### actor-init-ldes-client
+
+This repo makes use of the actor-init-ldes-client library. see [https://github.com/CoGhent/api-docs-tooling/wiki/TOOLING](https://github.com/CoGhent/api-docs-tooling/wiki/TOOLING) for installation.
+
+### postgresql environment
+
+In order to insert the data into a postgresql database, you must first install postgresql and create a database.
+Based on the [connection string](https://hasura.io/learn/database/postgresql/installation/postgresql-connection-string/) you can then insert the captured data into the postgresql database.
+
+
 ## USAGE 
 
 | Parameter | Description | Possible values |

@@ -2,69 +2,60 @@ import time
 import subprocess
 import pandas as pd
 import os
-
+from dataclasses import dataclass
+from datetime import datetime
 
 today = time.localtime()
 time_str = time.strftime("%m-%d-%YT%H:%M:%S.309Z", today)
 
 # define time from when to start fetching LDES.#
-fetch_from = "2021-10-20T00:00:00.309Z" ## change to 29 september 2021
-context = "src/utils/context.jsonld"
+
+fetch_from: str = "2021-10-20T00:00:00.309Z"  ## change to 29 september 2021
+context: str = "src/utils/context.jsonld"
 
 endpoints = {
     # CLI commands to fetch LDES from actor-init-ldes-client
-    "DMG": f"actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            + context + " --fromTime " + fetch_from + " --emitMemberOnce false --disablePolling true"
-            f" https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
-    "HVA": "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            + context + " --fromTime " + fetch_from + " --emitMemberOnce false --disablePolling true"
-            " https://apidg.gent.be/opendata/adlib2eventstream/v1/hva/objecten",
-    "STAM": "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            + context + "  --fromTime " + fetch_from + " --emitMemberOnce false --disablePolling true"
-            " https://apidg.gent.be/opendata/adlib2eventstream/v1/stam/objecten",
-    "IM": "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            + context + "   --fromTime " + fetch_from + " --emitMemberOnce false --disablePolling true"
-            " https://apidg.gent.be/opendata/adlib2eventstream/v1/industriemuseum/objecten",
-    "ARCH": "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            + context + "   --fromTime  "+ fetch_from +" --emitMemberOnce false --disablePolling true"
-            " https://apidg.gent.be/opendata/adlib2eventstream/v1/archiefgent/objecten",
-    "THES": "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            + context + "   --fromTime "+ fetch_from + " --emitMemberOnce false --disablePolling true"
-            " https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/thesaurus",
-    "AGENT": "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context "
-            +  context + "  --fromTime " + fetch_from + " --emitMemberOnce false --disablePolling true"
-            " https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/personen"
+    "DMG": "https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
+    "HVA": "https://apidg.gent.be/opendata/adlib2eventstream/v1/hva/objecten",
+    "STAM": "https://apidg.gent.be/opendata/adlib2eventstream/v1/stam/objecten",
+    "IM": "https://apidg.gent.be/opendata/adlib2eventstream/v1/industriemuseum/objecten",
+    "ARCH": "https://apidg.gent.be/opendata/adlib2eventstream/v1/archiefgent/objecten",
+    "THES": " https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/thesaurus",
+    "AGENT": "https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/personen"
 }
 
 ROOT_DIR = os.path.abspath(os.curdir)
 
 filepath = {
-    "DMG": ROOT_DIR + "/data/dmg_obj.json",
-    "HVA": ROOT_DIR + "/data/hva_obj.json",
-    "STAM": ROOT_DIR + "/data/stam_obj.json",
-    "IM": ROOT_DIR + "/data/im_obj.json",
-    "ARCH": ROOT_DIR + "/data/arch_obj.json",
-    "THES": ROOT_DIR + "/data/thes.json",
-    "AGENT": ROOT_DIR + "/data/agents.json"
+    "DMG": os.path.join(ROOT_DIR, "data", "dmg_obj.json"),
+    "HVA": os.path.join(ROOT_DIR, "data", "hva_obj.json"),
+    "STAM": os.path.join(ROOT_DIR, "data", "stam_obj.json"),
+    "IM": os.path.join(ROOT_DIR, "data", "im_obj.json"),
+    "ARCH": os.path.join(ROOT_DIR, "data", "arch_obj.json"),
+    "THES": os.path.join(ROOT_DIR, "data", "thes.json"),
+    "AGENT": os.path.join(ROOT_DIR, "data", "agents.json")
 }
 
 # define columns to for dataframes
 columns_obj = ["URI", "timestamp", "@type", "owner", "objectnumber", "title", "object_name", "object_name_id",
-               "creator", "creator_role", "creation_date", "creation_place","provenance_date", "provenance_type",
+               "creator", "creator_role", "creation_date", "creation_place", "provenance_date", "provenance_type",
                "material", "material_source", "description", "collection", "association", "location"]
 
 columns_thes = ["URI", "timestamp", "term", "ext_URI"]
 
 columns_agents = ["URI", "timestamp", "full_name", "family_name", "sirname", "name (organisations)", "date_of_birth",
-                  "date_of_death", "place_of_birth", "place_of_death", "nationality", "gender","ulan", "wikidata","rkd", "same_as"]
+                  "date_of_death", "place_of_birth", "place_of_death", "nationality", "gender", "ulan", "wikidata",
+                  "rkd", "same_as"]
 
 
-def fetch_json(key):
+def fetch_json(key, config):
     """read json from command line interface and write to .json file"""
-    with open(filepath[key], "w") as f:
-        if not os.path.exists(filepath[key]):
-            file(filepath[key], 'w').close()
-        p = subprocess.run(endpoints[key], shell=True, stdout=f, text=True)
+    with open(filepath[key], "w+") as f:
+        cmd = "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context {} --fromTime {}  --emitMemberOnce false --disablePolling true {}".format(
+            config.context, config.timestamp, endpoints[key])
+        print("executing {}".format(cmd))
+        p = subprocess.run(cmd, shell=True, stdout=f, text=True)
+    return True
 
 
 def generate_dataframe(key):
@@ -72,8 +63,25 @@ def generate_dataframe(key):
         res = p.read()
         res = res.splitlines()
         print("Done with parsing data from {}".format(key))
-        # print("Done with parsing data from {}".format(key))
         return res
+
+
+def clean_json_file(key):
+    """
+    the json files contain lots of GET requests and such, making it difficult to parse. This function removes every line not starting with "{" as these aren't JSON lines
+    @param key:
+    """
+    import os
+    with open(filepath[key], "r") as _input:
+        with open("temp.txt", "w") as _output:
+            # iterate all lines from file
+            for line in _input:
+                # if text matches then don't write it
+                if line.strip("\n").startswith('{'):
+                    _output.write(line)
+
+    # replace file with original name
+    os.replace('temp.txt', filepath[key])
 
 
 def fetch_objectnumber(df, range, json):
@@ -148,6 +156,7 @@ def fetch_material(df, range, json):
     except Exception as e:
         pass
 
+
 def fetch_collection(df, range, json):
     """fetch (internal) collection to which the object belongs"""
     try:
@@ -183,18 +192,19 @@ def fetch_timestamp(df, range, json):
 def fetch_creators(df, range, json):
     creators = []
     try:
-         for i in json["MaterieelDing.productie"]:
+        for i in json["MaterieelDing.productie"]:
             cr = i["Activiteit.uitgevoerdDoor"]
             try:
-                 for a in cr:
-                     crea = a["https://linked.art/ns/terms/equivalent"]["label"]["@value"]
-                     creators.append(crea)
+                for a in cr:
+                    crea = a["https://linked.art/ns/terms/equivalent"]["label"]["@value"]
+                    creators.append(crea)
             except:
                 crea = a["https://linked.art/ns/terms/equivalent"]["label"]["@value"]
                 creators.append(crea)
             df.at[range, "creator"] = creators
     except Exception:
         pass
+
 
 def fetch_creator_role(df, range, json):
     creator_role = []
@@ -270,7 +280,8 @@ def fetch_objectname(df, range, json):
     except Exception:
         pass
 
-#TODO: classificatie.id (link naar auhtority)
+
+# TODO: classificatie.id (link naar auhtority)
 def fetch_objectnaam_id(df, range, json):
     try:
         object_names_auth = []
@@ -304,8 +315,8 @@ def fetch_association(df, range_, json):
 def fetch_location(df, range, json):
     """fetch location where the object is currently located from json"""
     try:
-       location = json["MensgemaaktObject.locatie"]["http://www.w3.org/2004/02/skos/core#note"]
-       df.at[range, "location"] = location
+        location = json["MensgemaaktObject.locatie"]["http://www.w3.org/2004/02/skos/core#note"]
+        df.at[range, "location"] = location
     except Exception:
         pass
 
@@ -331,12 +342,14 @@ def fetch_thesaurus_external_uri(df, range, json):
 def safe_value(field_val):
     return field_val if not pd.isna(field_val) else "Other"
 
+
 def fetch_agent_fullname(df, range, json):
     try:
         full_name = json["https://data.vlaanderen.be/ns/persoon#volledigeNaam"]
         df.at[range, "full_name"] = full_name
     except Exception:
         pass
+
 
 def fetch_agent_family_name(df, range, json):
     try:
@@ -345,12 +358,14 @@ def fetch_agent_family_name(df, range, json):
     except Exception:
         pass
 
+
 def fetch_agent_first_name(df, range, json):
     try:
         first_name = json["http://xmlns.com/foaf/0.1/givenName"]
         df.at[range, "sirname"] = first_name
     except Exception:
         pass
+
 
 def fetch_agent_same_as(df, range, json):
     try:
@@ -372,34 +387,46 @@ def fetch_agent_same_as(df, range, json):
 
 def fetch_agent_birthdate(df, range, json):
     try:
-        b_date = json["https://data.vlaanderen.be/ns/persoon#heeftGeboorte"]["https://data.vlaanderen.be/ns/persoon#datum"]["@value"]
-        df.at[range,"date_of_birth"] = b_date
+        b_date = \
+            json["https://data.vlaanderen.be/ns/persoon#heeftGeboorte"]["https://data.vlaanderen.be/ns/persoon#datum"][
+                "@value"]
+        df.at[range, "date_of_birth"] = b_date
     except Exception:
         pass
 
 
 def fetch_agent_birthplace(df, range, json):
     try:
-        b_place = json["https://data.vlaanderen.be/ns/persoon#heeftGeboorte"]["https://data.vlaanderen.be/ns/persoon#plaats"]["@id"]
-        df.at[range,"place_of_birth"] = b_place
+        b_place = \
+            json["https://data.vlaanderen.be/ns/persoon#heeftGeboorte"]["https://data.vlaanderen.be/ns/persoon#plaats"][
+                "@id"]
+        df.at[range, "place_of_birth"] = b_place
     except Exception:
         pass
 
+
 def fetch_agent_date_of_death(df, range, json):
     try:
-        d_date = json["https://data.vlaanderen.be/ns/persoon#heeftOverlijden"]["https://data.vlaanderen.be/ns/persoon#datum"]["@value"]
+        d_date = \
+            json["https://data.vlaanderen.be/ns/persoon#heeftOverlijden"][
+                "https://data.vlaanderen.be/ns/persoon#datum"][
+                "@value"]
         df.at[range, "date_of_death"] = d_date
     except Exception:
         pass
 
+
 def fetch_agent_deathplace(df, range, json):
     try:
-        d_place = json["https://data.vlaanderen.be/ns/persoon#heeftOverlijden"]["https://data.vlaanderen.be/ns/persoon#plaats"]["@id"]
-        df.at[range,"place_of_death"] = d_place
+        d_place = \
+            json["https://data.vlaanderen.be/ns/persoon#heeftOverlijden"][
+                "https://data.vlaanderen.be/ns/persoon#plaats"][
+                "@id"]
+        df.at[range, "place_of_death"] = d_place
     except Exception:
         pass
 
-#todo
+
+# todo
 def fetch_agent_gender(df, range, json):
     pass
-
