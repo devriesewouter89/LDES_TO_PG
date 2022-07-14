@@ -4,11 +4,11 @@ from src.utils.utils import *
 import json
 import pandas as pd
 
-def generate_dataframe_im():
-    df_im = pd.DataFrame(generate_dataframe("IM"))
+def generate_dataframe_im(config):
+    df_im = pd.DataFrame(generate_dataframe("IM", config))
 
-    for i in range(0, len(columns_obj)):
-        df_im.insert(i, columns_obj[i], "")
+    for i in range(0, len(config.columns_obj)):
+        df_im.insert(i, config.columns_obj[i], "")
 
     for i in range(0, len(df_im)):
         x = df_im.loc[i]

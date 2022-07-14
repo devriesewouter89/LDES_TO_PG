@@ -66,7 +66,7 @@ if __name__ == "__main__":
     parser.add_argument("--fetch", metavar="fetch", action="append", help="choose collections to fetch",
                         choices=["DMG", "IM", "STAM", "HVA",
                                  "ARCHIEF", "THESAURUS", "AGENTS"])
-    parser.add_argument("--timestamp", default="2022-07-14T15:48:12.309Z")
+    parser.add_argument("--timestamp", default="2021-07-14T15:48:12.309Z")
     parser.add_argument("--result", choices=["pg", "csv", "xlsx"])
     args = parser.parse_args()
 
@@ -83,14 +83,14 @@ if __name__ == "__main__":
             # 1. fetch the stream and place it in json file
             # todo: when does the stream stop???
             # todo: right now, we don't know when the subprocess is finished, only then can we continue: ASYNCIO!!
-            fetch_json(key=_location, config=_config)
-            # print("{} fetched".format(_c))
+            # p = fetch_json(key=_location, config=_config)
+            # print("{} fetched".format(_location))
             # 2. clean the json file
-            clean_json_file(_location)
-            # print("cleaned {}".format(_c))
+            clean_json_file(_location, config=_config)
+            print("cleaned {}".format(_location))
             # 3. export to dataframe
             # todo: check if all names are correct (_location)
-            df = generate_dataframe_generic(_location)
+            df = generate_dataframe_generic(_location, config=_config)
             if args.result == "pg":
                 df_to_sql(df, dbName=_location)
                 continue

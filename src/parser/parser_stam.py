@@ -3,12 +3,12 @@
 from src.utils.utils import *
 import json
 
-def generate_dataframe_stam():
+def generate_dataframe_stam(config):
 
-    df_stam = pd.DataFrame(generate_dataframe("STAM"))
+    df_stam = pd.DataFrame(generate_dataframe("STAM", config))
 
-    for i in range(0, len(columns_obj)):
-        df_stam.insert(i, columns_obj[i], "")
+    for i in range(0, len(config.columns_obj)):
+        df_stam.insert(i, config.columns_obj[i], "")
 
     for i in range(0, len(df_stam)):
         x = df_stam.loc[i]

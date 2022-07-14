@@ -13,66 +13,34 @@ time_str = time.strftime("%m-%d-%YT%H:%M:%S.309Z", today)
 fetch_from: str = "2021-10-20T00:00:00.309Z"  ## change to 29 september 2021
 context: str = "src/utils/context.jsonld"
 
-endpoints = {
-    # CLI commands to fetch LDES from actor-init-ldes-client
-    "DMG": "https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
-    "HVA": "https://apidg.gent.be/opendata/adlib2eventstream/v1/hva/objecten",
-    "STAM": "https://apidg.gent.be/opendata/adlib2eventstream/v1/stam/objecten",
-    "IM": "https://apidg.gent.be/opendata/adlib2eventstream/v1/industriemuseum/objecten",
-    "ARCH": "https://apidg.gent.be/opendata/adlib2eventstream/v1/archiefgent/objecten",
-    "THES": " https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/thesaurus",
-    "AGENT": "https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/personen"
-}
-
-ROOT_DIR = os.path.abspath(os.curdir)
-
-filepath = {
-    "DMG": os.path.join(ROOT_DIR, "data", "dmg_obj.json"),
-    "HVA": os.path.join(ROOT_DIR, "data", "hva_obj.json"),
-    "STAM": os.path.join(ROOT_DIR, "data", "stam_obj.json"),
-    "IM": os.path.join(ROOT_DIR, "data", "im_obj.json"),
-    "ARCH": os.path.join(ROOT_DIR, "data", "arch_obj.json"),
-    "THES": os.path.join(ROOT_DIR, "data", "thes.json"),
-    "AGENT": os.path.join(ROOT_DIR, "data", "agents.json")
-}
-
-# define columns to for dataframes
-columns_obj = ["URI", "timestamp", "@type", "owner", "objectnumber", "title", "object_name", "object_name_id",
-               "creator", "creator_role", "creation_date", "creation_place", "provenance_date", "provenance_type",
-               "material", "material_source", "description", "collection", "association", "location"]
-
-columns_thes = ["URI", "timestamp", "term", "ext_URI"]
-
-columns_agents = ["URI", "timestamp", "full_name", "family_name", "sirname", "name (organisations)", "date_of_birth",
-                  "date_of_death", "place_of_birth", "place_of_death", "nationality", "gender", "ulan", "wikidata",
-                  "rkd", "same_as"]
-
 
 def fetch_json(key, config):
     """read json from command line interface and write to .json file"""
-    with open(filepath[key], "w+") as f:
-        cmd = "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context {} --fromTime {}  --emitMemberOnce false --disablePolling true {}".format(
-            config.context, config.timestamp, endpoints[key])
+    with open(config.filepath[key], "w+") as f:
+        cmd = "actor-init-ldes-client --pollingInterval 5000 --mimeType application/ld+json --context {} --fromTime {" \
+              "}  --emitMemberOnce false --disablePolling true {}".format(
+                config.context, config.timestamp, config.endpoints[key])
         print("executing {}".format(cmd))
         p = subprocess.run(cmd, shell=True, stdout=f, text=True)
     return True
 
 
-def generate_dataframe(key):
-    with open(filepath[key]) as p:
+def generate_dataframe(key, config):
+    with open(config.filepath[key]) as p:
         res = p.read()
         res = res.splitlines()
         print("Done with parsing data from {}".format(key))
         return res
 
 
-def clean_json_file(key):
+def clean_json_file(key, config):
     """
     the json files contain lots of GET requests and such, making it difficult to parse. This function removes every line not starting with "{" as these aren't JSON lines
-    @param key:
+    @param key: key is the name of the location
+    @param config: link to config file
     """
     import os
-    with open(filepath[key], "r") as _input:
+    with open(config.filepath[key], "r") as _input:
         with open("temp.txt", "w") as _output:
             # iterate all lines from file
             for line in _input:
@@ -81,7 +49,7 @@ def clean_json_file(key):
                     _output.write(line)
 
     # replace file with original name
-    os.replace('temp.txt', filepath[key])
+    os.replace('temp.txt', config.filepath[key])
 
 
 def fetch_objectnumber(df, range, json):

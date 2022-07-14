@@ -3,11 +3,11 @@
 from src.utils.utils import *
 import json
 
-def generate_dataframe_DMG():
-    df_dmg = pd.DataFrame(generate_dataframe("DMG"))
+def generate_dataframe_DMG(config):
+    df_dmg = pd.DataFrame(generate_dataframe("DMG", config))
 
-    for i in range(0, len(columns_obj)):
-        df_dmg.insert(i, columns_obj[i], "")
+    for i in range(0, len(config.columns_obj)):
+        df_dmg.insert(i, config.columns_obj[i], "")
 
     for i in range(0, len(df_dmg)):
         x = df_dmg.loc[i]

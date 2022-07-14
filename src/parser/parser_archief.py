@@ -2,11 +2,11 @@ from src.utils.utils import *
 import json
 import pandas as pd
 
-def generate_dataframe_ARCH():
-    df_archief = pd.DataFrame(generate_dataframe("ARCH"))
+def generate_dataframe_ARCH(config):
+    df_archief = pd.DataFrame(generate_dataframe("ARCH", config))
 
-    for i in range(0, len(columns_obj)):
-        df_archief.insert(i, columns_obj[i], "")
+    for i in range(0, len(config.columns_obj)):
+        df_archief.insert(i, config.columns_obj[i], "")
 
     for i in range(0, len(df_archief)):
         x = df_archief.loc[i]

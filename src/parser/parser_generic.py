@@ -9,22 +9,22 @@ from src.parser.parser_agents import generate_dataframe_AGENTS
 from src.parser.parser_archief import generate_dataframe_ARCH
 
 keys = ["DMG", "HVA", "STAM", "IM", "THES", "AGENT", "ARCH"]
-def generate_dataframe_generic(location):
+def generate_dataframe_generic(location, config):
     match location:
         case "DMG":
-            df = generate_dataframe_DMG()
+            df = generate_dataframe_DMG(config)
         case "HVA":
-            df = generate_dataframe_hva()
+            df = generate_dataframe_hva(config)
         case "STAM":
-            df = generate_dataframe_stam()
+            df = generate_dataframe_stam(config)
         case "IM":
-            df = generate_dataframe_im()
+            df = generate_dataframe_im(config)
         case "THES":
-            df = generate_dataframe_thesaurus()
+            df = generate_dataframe_thesaurus(config)
         case "AGENT":
-            df = generate_dataframe_AGENTS()
+            df = generate_dataframe_AGENTS(config)
         case "ARCH":
-            df = generate_dataframe_ARCH()
+            df = generate_dataframe_ARCH(config)
         case _:
             print("code not found")
             df = None

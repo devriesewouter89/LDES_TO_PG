@@ -2,12 +2,12 @@ from src.utils.utils import *
 import json
 
 
-def generate_dataframe_thesaurus():
+def generate_dataframe_thesaurus(config):
     """generate dataframe and populate with data from LDES"""
-    df_thes = pd.DataFrame(generate_dataframe("THES"))
+    df_thes = pd.DataFrame(generate_dataframe("THES", config))
 
-    for i in range(0, len(columns_thes)):
-        df_thes.insert(i, columns_thes[i], "")
+    for i in range(0, len(config.columns_thes)):
+        df_thes.insert(i, config.columns_thes[i], "")
 
     for i in range(0, len(df_thes)):
         x = df_thes.loc[i]

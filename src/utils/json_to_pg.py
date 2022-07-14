@@ -10,6 +10,7 @@ from src.parser.parser_thes import generate_dataframe_thesaurus
 from src.parser.parser_agents import generate_dataframe_AGENTS
 from src.parser.parser_archief import generate_dataframe_ARCH
 from src.parser.parser_generic import generate_dataframe_generic
+from src.utils.config import config
 
 
 # from src.parser.parser_archief import
@@ -34,26 +35,26 @@ from src.parser.parser_generic import generate_dataframe_generic
 # df_thes.to_sql("ldes_thes", engine, if_exists="append")
 
 
-def object_counter():
+def object_counter(config):
     try:
-        count_stam = len(df_stam["URI"])
-        count_dmg = len(df_dmg["URI"])
-        count_hva = len(df_hva["URI"])
-        count_im = len(df_im["URI"])
-        count_archief = len(df_archief["URI"])
+        count_stam = len(config.df_stam["URI"])
+        count_dmg = len(config.df_dmg["URI"])
+        count_hva = len(config.df_hva["URI"])
+        count_im = len(config.df_im["URI"])
+        count_archief = len(config.df_archief["URI"])
         total = count_im + count_dmg + count_hva + count_stam + count_archief
         return total
     except Exception:
         pass
 
 
-def general_tracker():
+def general_tracker(config):
     try:
-        count_stam = len(df_stam["URI"])
-        count_dmg = len(df_dmg["URI"])
-        count_hva = len(df_hva["URI"])
-        count_im = len(df_im["URI"])
-        count_archief = len(df_archief["URI"])
+        count_stam = len(config.df_stam["URI"])
+        count_dmg = len(config.df_dmg["URI"])
+        count_hva = len(config.df_hva["URI"])
+        count_im = len(config.df_im["URI"])
+        count_archief = len(config.df_archief["URI"])
 
         data = {
             "INST": ["STAM", "Design Museum Gent", "Huis van Alijn", "Industriemuseum", "Archief"],
@@ -87,17 +88,17 @@ if __name__ == "__main__":
     engine = create_engine(postgres_credentials)
 
     convert_to_pg(args.convert, engine)
+    _config = config()
+    # df_im = generate_dataframe_im()
+    # df_stam = generate_dataframe_stam()
+    # df_dmg = generate_dataframe_DMG()
+    # df_hva = generate_dataframe_hva()
+    # df_archief = generate_dataframe_ARCH()
+    # df_thes = generate_dataframe_thesaurus()
+    # df_agents = generate_dataframe_AGENTS()
+    """
 
-# df_im = generate_dataframe_im()
-# df_stam = generate_dataframe_stam()
-# df_dmg = generate_dataframe_DMG()
-# df_hva = generate_dataframe_hva()
-# df_archief = generate_dataframe_ARCH()
-# df_thes = generate_dataframe_thesaurus()
-# df_agents = generate_dataframe_AGENTS()
-
-"""
-    general_tracker()
+    general_tracker(config=_config)
 
     df_dmg_final_len = len(df_dmg.URI.unique())
     df_hva_final_len = len(df_hva.URI.unique())
