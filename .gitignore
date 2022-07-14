@@ -8,3 +8,7 @@ src/utils/data/hva_obj.json
 src/utils/data/im_obj.json
 src/utils/data/thes.json
 src/utils/data/stam_obj.json
+*pyc
+*json
+*xlsx
+*csv
