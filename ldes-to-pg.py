@@ -65,9 +65,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='return LDES for chosen DCAT')
     parser.add_argument("--fetch", metavar="fetch", action="append", help="choose collections to fetch",
                         choices=["DMG", "IM", "STAM", "HVA",
-                                 "ARCHIEF", "THESAURUS", "AGENTS"])
+                                 "ARCHIEF", "THESAURUS", "AGENTS"], default=["DMG"])
     parser.add_argument("--timestamp", default="2021-07-14T15:48:12.309Z")
-    parser.add_argument("--result", choices=["pg", "csv", "xlsx"])
+    parser.add_argument("--result", choices=["pg", "csv", "xlsx"], default="csv")
+    parser.add_argument("--download", "-d", action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
     choice = args.fetch
@@ -83,8 +84,9 @@ if __name__ == "__main__":
             # 1. fetch the stream and place it in json file
             # todo: when does the stream stop???
             # todo: right now, we don't know when the subprocess is finished, only then can we continue: ASYNCIO!!
-            # p = fetch_json(key=_location, config=_config)
-            # print("{} fetched".format(_location))
+            if args.download:
+                p = fetch_json(key=_location, config=_config)
+                print("{} fetched".format(_location))
             # 2. clean the json file
             clean_json_file(_location, config=_config)
             print("cleaned {}".format(_location))
