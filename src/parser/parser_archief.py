@@ -22,7 +22,7 @@ def generate_dataframe_ARCH(config):
         fetch_objectname(df_archief, i, j)
         fetch_provenance(df_archief, i, j)
 
-        fetch_creator(df_archief, i, j)
+        fetch_creators(df_archief, i, j)
         fetch_creator_role(df_archief, i, j)
         fetch_creator_place(df_archief, i, j)
         fetch_creation_date(df_archief, i, j)

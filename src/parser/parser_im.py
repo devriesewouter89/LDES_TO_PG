@@ -24,7 +24,7 @@ def generate_dataframe_im(config):
         fetch_objectname(df_im, i, j)
         fetch_objectnaam_id(df_im, i, j)
         fetch_provenance(df_im, i, j)
-        fetch_creator(df_im, i, j)
+        fetch_creators(df_im, i, j)
         fetch_creator_role(df_im,i ,j)
         fetch_creator_place(df_im, i, j)
         fetch_creation_date(df_im, i, j)

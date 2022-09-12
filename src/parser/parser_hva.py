@@ -24,7 +24,7 @@ def generate_dataframe_hva(config):
         fetch_objectname(df_hva, i, j)
         fetch_objectnaam_id(df_hva, i, j)
         fetch_provenance(df_hva, i, j)
-        fetch_creator(df_hva, i, j)
+        fetch_creators(df_hva, i, j)
         fetch_creator_role(df_hva,i ,j)
         fetch_creator_place(df_hva, i, j)
         fetch_creation_date(df_hva, i, j)
