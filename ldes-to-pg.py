@@ -61,7 +61,7 @@ def df_to_xlsx(df, xlsx_name, export_path):
     df.to_excel(_file)
 
 
-class downloadCollection(threading.Thread):
+class DownloadCollection(threading.Thread):
     def __init__(self, threadID, location, config):
         threading.Thread.__init__(self, daemon=True)
         self.threadID = threadID
@@ -73,6 +73,19 @@ class downloadCollection(threading.Thread):
         try:
             p = fetch_json(key=self.location, config=self.config)
             print("{} fetched".format(_location))
+            # 2. clean the json file
+            clean_json_file(_location, config=_config)
+            print("cleaned {}".format(_location))
+            # 3. export to dataframe
+            # todo: check if all names are correct (_location)
+            df = generate_dataframe_generic(_location, config=_config)
+            if args.result == "pg":
+                df_to_sql(df, dbName=_location)
+            if args.result == "csv":
+                df_to_csv(df, csv_name=_location, export_path=_config.datapath)
+            if args.result == "xlsx":
+                df_to_xlsx(df, xlsx_name=_location, export_path=_config.datapath)
+
         except Exception as e:
             print(e)
 
@@ -101,11 +114,12 @@ if __name__ == "__main__":
             # 1. fetch the stream and place it in json file
             # todo: when does the stream stop???
             # todo: right now, we don't know when the subprocess is finished, only then can we continue: ASYNCIO!!
-            tempThread = downloadCollection(idx, _location, _config)
+            tempThread = DownloadCollection(idx, _location, _config)
             threadList.append(tempThread)
             tempThread.start()
         for i in threadList:
             i.join()
+
 
     for _location in choice:
         try:
