@@ -23,7 +23,7 @@ def generate_dataframe_stam(config):
         fetch_owner(df_stam, i, j)
         fetch_objectname(df_stam, i, j)
         fetch_provenance(df_stam, i, j)
-        fetch_creator(df_stam, i, j)
+        fetch_creators(df_stam, i, j)
         fetch_creator_role(df_stam,i ,j)
         fetch_creator_place(df_stam, i, j)
         fetch_creation_date(df_stam, i, j)
