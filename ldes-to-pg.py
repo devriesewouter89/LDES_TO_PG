@@ -82,7 +82,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='return LDES for chosen DCAT')
     parser.add_argument("--fetch", metavar="fetch", nargs='*', help="choose collections to fetch",
                         choices=["DMG", "IM", "STAM", "HVA",
-                                 "ARCHIEF", "THESAURUS", "AGENTS"], default=["DMG"])
+                                 "ARCHIEF", "THES", "AGENT"], default=["DMG"])
     parser.add_argument("--timestamp", default="2021-07-14T15:48:12.309Z")
     parser.add_argument("--result", choices=["pg", "csv", "xlsx"], default="csv")
     parser.add_argument("--download", "-d", action=argparse.BooleanOptionalAction)
