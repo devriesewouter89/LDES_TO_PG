@@ -7,6 +7,7 @@ from src.parser.parser_generic import generate_dataframe_generic
 from sqlalchemy import create_engine
 import psycopg2
 from src.utils.config import *
+import threading
 
 # todo: add archive
 keys = ["DMG", "HVA", "STAM", "IM", "THES", "AGENT", "ARCH"]
@@ -60,10 +61,26 @@ def df_to_xlsx(df, xlsx_name, export_path):
     df.to_excel(_file)
 
 
+class downloadCollection(threading.Thread):
+    def __init__(self, threadID, location, config):
+        threading.Thread.__init__(self, daemon=True)
+        self.threadID = threadID
+        self.location = location
+        self.config = config
+
+    def run(self) -> None:
+        print("downloading collection of {}".format(self.location))
+        try:
+            p = fetch_json(key=self.location, config=self.config)
+            print("{} fetched".format(_location))
+        except Exception as e:
+            print(e)
+
+
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='return LDES for chosen DCAT')
-    parser.add_argument("--fetch", metavar="fetch", action="append", help="choose collections to fetch",
+    parser.add_argument("--fetch", metavar="fetch", nargs='*', help="choose collections to fetch",
                         choices=["DMG", "IM", "STAM", "HVA",
                                  "ARCHIEF", "THESAURUS", "AGENTS"], default=["DMG"])
     parser.add_argument("--timestamp", default="2021-07-14T15:48:12.309Z")
@@ -78,15 +95,20 @@ if __name__ == "__main__":
     # STAM; 30-08
 
     os.makedirs(_config.datapath, exist_ok=True)
-
-    for _location in choice:
-        try:
+    if args.download:
+        threadList = list()
+        for idx, _location in enumerate(choice):
             # 1. fetch the stream and place it in json file
             # todo: when does the stream stop???
             # todo: right now, we don't know when the subprocess is finished, only then can we continue: ASYNCIO!!
-            if args.download:
-                p = fetch_json(key=_location, config=_config)
-                print("{} fetched".format(_location))
+            tempThread = downloadCollection(idx, _location, _config)
+            threadList.append(tempThread)
+            tempThread.start()
+        for i in threadList:
+            i.join()
+
+    for _location in choice:
+        try:
             # 2. clean the json file
             clean_json_file(_location, config=_config)
             print("cleaned {}".format(_location))
