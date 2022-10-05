@@ -12,3 +12,5 @@ src/utils/data/stam_obj.json
 *.json
 *.xlsx
 *.csv
+
+*.pyc

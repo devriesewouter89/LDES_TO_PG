@@ -82,9 +82,9 @@ class DownloadCollection(threading.Thread):
             if args.result == "pg":
                 df_to_sql(df, dbName=_location)
             if args.result == "csv":
-                df_to_csv(df, csv_name=_location, export_path=_config.datapath)
+                df_to_csv(df, csv_name=_location, export_path=_config.data_path)
             if args.result == "xlsx":
-                df_to_xlsx(df, xlsx_name=_location, export_path=_config.datapath)
+                df_to_xlsx(df, xlsx_name=_location, export_path=_config.data_path)
 
         except Exception as e:
             print(e)
@@ -103,11 +103,11 @@ if __name__ == "__main__":
 
     choice = args.fetch
     # initialize the config file
-    _config = config(timestamp=args.timestamp)
+    _config = Config(timestamp=args.timestamp)
     # IM + HVA; laatste maal 28-08
     # STAM; 30-08
 
-    os.makedirs(_config.datapath, exist_ok=True)
+    os.makedirs(_config.data_path, exist_ok=True)
     if args.download:
         threadList = list()
         for idx, _location in enumerate(choice):
@@ -133,10 +133,10 @@ if __name__ == "__main__":
                 df_to_sql(df, dbName=_location)
                 continue
             if args.result == "csv":
-                df_to_csv(df, csv_name=_location, export_path=_config.datapath)
+                df_to_csv(df, csv_name=_location, export_path=_config.data_path)
                 continue
             if args.result == "xlsx":
-                df_to_xlsx(df, xlsx_name=_location, export_path=_config.datapath)
+                df_to_xlsx(df, xlsx_name=_location, export_path=_config.data_path)
                 continue
         except Exception as e:
             print(e)
