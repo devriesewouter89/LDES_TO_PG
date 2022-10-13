@@ -4,17 +4,17 @@ replicate CoGhent Linked Data Event Streams into tabular dataframe (postgresql, 
 
 Available collections:
 
-| code | Description |
-|---------|-----------|
-|DMG | Design Museum Gent|
-|HVA | Huis van Alijn|
-|IM | Industriemuseum|
-|ARCHIEF | Archief Gent|
-|STAM | STAM (stadsmuseum Gent)|
+| code            | Description |
+|-----------------|-----------|
+| dmg             | Design Museum Gent|
+| hva             | Huis van Alijn|
+| industriemuseum | Industriemuseum|
+| archiefgent     | Archief Gent|
+| stam            | STAM (stadsmuseum Gent)|
 |||
-|THES | thesaurus (conceptlist)|
-|AGENTS | agent list|
-|EXHIBITIONS|list of exhibitions (restricted to Design Museum Gent )|
+| thesaurus       | thesaurus (conceptlist)|
+| agents          | agent list|
+| EXHIBITIONS     |list of exhibitions (restricted to Design Museum Gent )|
 
 ## installation
 

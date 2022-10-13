@@ -17,13 +17,13 @@ class Config:
     context: str = "src/utils/context.jsonld"
 
     filepath = {
-        "DMG": os.path.join(ROOT_DIR, "data", "dmg_obj.json"),
-        "HVA": os.path.join(ROOT_DIR, "data", "hva_obj.json"),
-        "STAM": os.path.join(ROOT_DIR, "data", "stam_obj.json"),
-        "IM": os.path.join(ROOT_DIR, "data", "im_obj.json"),
-        "ARCH": os.path.join(ROOT_DIR, "data", "arch_obj.json"),
-        "THES": os.path.join(ROOT_DIR, "data", "thes.json"),
-        "AGENT": os.path.join(ROOT_DIR, "data", "agents.json")
+        "dmg": os.path.join(ROOT_DIR, "data", "dmg_obj.json"),
+        "hva": os.path.join(ROOT_DIR, "data", "hva_obj.json"),
+        "stam": os.path.join(ROOT_DIR, "data", "stam_obj.json"),
+        "industriemuseum": os.path.join(ROOT_DIR, "data", "im_obj.json"),
+        "archiefgent": os.path.join(ROOT_DIR, "data", "arch_obj.json"),
+        "thesaurus": os.path.join(ROOT_DIR, "data", "thes.json"),
+        "agents": os.path.join(ROOT_DIR, "data", "agents.json")
     }
 
     # define columns to for dataframes
@@ -40,11 +40,11 @@ class Config:
 
     endpoints = {
         # CLI commands to fetch LDES from actor-init-ldes-client
-        "DMG": "https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
-        "HVA": "https://apidg.gent.be/opendata/adlib2eventstream/v1/hva/objecten",
-        "STAM": "https://apidg.gent.be/opendata/adlib2eventstream/v1/stam/objecten",
-        "IM": "https://apidg.gent.be/opendata/adlib2eventstream/v1/industriemuseum/objecten",
-        "ARCH": "https://apidg.gent.be/opendata/adlib2eventstream/v1/archiefgent/objecten",
-        "THES": " https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/thesaurus",
-        "AGENT": "https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/personen"
+        "dmg": "https://apidg.gent.be/opendata/adlib2eventstream/v1/dmg/objecten",
+        "hva": "https://apidg.gent.be/opendata/adlib2eventstream/v1/hva/objecten",
+        "stam": "https://apidg.gent.be/opendata/adlib2eventstream/v1/stam/objecten",
+        "industriemuseum": "https://apidg.gent.be/opendata/adlib2eventstream/v1/industriemuseum/objecten",
+        "archiefgent": "https://apidg.gent.be/opendata/adlib2eventstream/v1/archiefgent/objecten",
+        "thesaurus": " https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/thesaurus",
+        "agents": "https://apidg.gent.be/opendata/adlib2eventstream/v1/adlib/personen"
     }

@@ -57,7 +57,7 @@ def general_tracker(config):
         count_archief = len(config.df_archief["URI"])
 
         data = {
-            "INST": ["STAM", "Design Museum Gent", "Huis van Alijn", "Industriemuseum", "Archief"],
+            "INST": ["stam", "Design Museum Gent", "Huis van Alijn", "Industriemuseum", "Archief"],
             "object_count": [count_stam, count_dmg, count_hva, count_im, count_archief]
         }
 
@@ -71,7 +71,7 @@ def general_tracker(config):
 def convert_to_pg(location_list, postgres_engine):
     # todo: optimize for concurrent conversion
     for c in location_list:
-        if c in ["DMG", "IM", "STAM", "HVA", "ARCH", "THES"]:
+        if c in ["dmg", "IM", "stam", "HVA", "ARCH", "THES"]:
             df = generate_dataframe_generic(c)
         else:
             df = generate_dataframe_AGENTS()
@@ -81,7 +81,7 @@ def convert_to_pg(location_list, postgres_engine):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='convert json to postgres for chosen DCAT')
     parser.add_argument("--convert", metavar="convert", action="append", help="choose collections to convert",
-                        choices=["DMG", "IM", "STAM", "HVA", "ARCH", "THES", "AGENTS"])
+                        choices=["dmg", "IM", "stam", "HVA", "ARCH", "THES", "AGENTS"])
     args = parser.parse_args()
 
     postgres_credentials = "postgresql://postgres:postgres@localhost:5432/coghent_DMG"

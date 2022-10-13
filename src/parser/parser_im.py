@@ -4,8 +4,8 @@ from src.utils.utils import *
 import json
 import pandas as pd
 
-def generate_dataframe_im(config):
-    df_im = pd.DataFrame(generate_dataframe("IM", config))
+def generate_dataframe_im(location, config):
+    df_im = pd.DataFrame(generate_dataframe(location, config))
 
     for i in range(0, len(config.columns_obj)):
         df_im.insert(i, config.columns_obj[i], "")
@@ -23,6 +23,8 @@ def generate_dataframe_im(config):
         fetch_owner(df_im, i, j)
         fetch_objectname(df_im, i, j)
         fetch_objectnaam_id(df_im, i, j)
+        fetch_objectnumber(df_im, i, j)
+
         fetch_provenance(df_im, i, j)
         fetch_creators(df_im, i, j)
         fetch_creator_role(df_im,i ,j)

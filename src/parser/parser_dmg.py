@@ -3,8 +3,8 @@
 from src.utils.utils import *
 import json
 
-def generate_dataframe_DMG(config):
-    df_dmg = pd.DataFrame(generate_dataframe("DMG", config))
+def generate_dataframe_DMG(location, config):
+    df_dmg = pd.DataFrame(generate_dataframe(location, config))
 
     for i in range(0, len(config.columns_obj)):
         df_dmg.insert(i, config.columns_obj[i], "")

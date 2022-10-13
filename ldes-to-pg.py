@@ -10,7 +10,7 @@ from src.utils.config import *
 import threading
 
 # todo: add archive
-keys = ["DMG", "HVA", "STAM", "IM", "THES", "AGENT", "ARCH"]
+keys = ["dmg", "hva", "stam", "industriemuseum", "thesaurus", "agents", "archiefgent"]
 
 
 # TODO: make function so that it only fetches updates made since last day.
@@ -31,8 +31,8 @@ def verify_time(timestamp: str):
         print("incorrect fetch time given")
 
 
-def df_to_sql(df, dbName):
-    postgres_credentials = "postgresql://postgres:postgres@localhost/".format(dbName)
+def df_to_sql(df, db_name):
+    postgres_credentials = "postgresql://postgres:postgres@localhost/".format(db_name)
     db = create_engine(postgres_credentials)
     conn = db.connect()
 
@@ -80,7 +80,7 @@ class DownloadCollection(threading.Thread):
             # todo: check if all names are correct (_location)
             df = generate_dataframe_generic(_location, config=_config)
             if args.result == "pg":
-                df_to_sql(df, dbName=_location)
+                df_to_sql(df, db_name=_location)
             if args.result == "csv":
                 df_to_csv(df, csv_name=_location, export_path=_config.data_path)
             if args.result == "xlsx":
@@ -94,8 +94,8 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='return LDES for chosen DCAT')
     parser.add_argument("--fetch", metavar="fetch", nargs='*', help="choose collections to fetch",
-                        choices=["DMG", "IM", "STAM", "HVA",
-                                 "ARCHIEF", "THES", "AGENT"], default=["DMG"])
+                        choices=["dmg", "im", "stam", "hva",
+                                 "archiefgent", "thesaurus", "AGENT"], default=["dmg"])
     parser.add_argument("--timestamp", default="2021-07-14T15:48:12.309Z")
     parser.add_argument("--result", choices=["pg", "csv", "xlsx"], default="csv")
     parser.add_argument("--download", "-d", action=argparse.BooleanOptionalAction)
@@ -105,15 +105,15 @@ if __name__ == "__main__":
     # initialize the config file
     _config = Config(timestamp=args.timestamp)
     # IM + HVA; laatste maal 28-08
-    # STAM; 30-08
+    # stam; 30-08
 
     os.makedirs(_config.data_path, exist_ok=True)
     if args.download:
+        print("starting the download at {}".format(datetime.now().strftime("%H:%M:%S")))
         threadList = list()
         for idx, _location in enumerate(choice):
             # 1. fetch the stream and place it in json file
             # todo: when does the stream stop???
-            # todo: right now, we don't know when the subprocess is finished, only then can we continue: ASYNCIO!!
             tempThread = DownloadCollection(idx, _location, _config)
             threadList.append(tempThread)
             tempThread.start()
@@ -127,10 +127,9 @@ if __name__ == "__main__":
             clean_json_file(_location, config=_config)
             print("cleaned {}".format(_location))
             # 3. export to dataframe
-            # todo: check if all names are correct (_location)
             df = generate_dataframe_generic(_location, config=_config)
             if args.result == "pg":
-                df_to_sql(df, dbName=_location)
+                df_to_sql(df, db_name=_location)
                 continue
             if args.result == "csv":
                 df_to_csv(df, csv_name=_location, export_path=_config.data_path)

@@ -2,8 +2,8 @@ from src.utils.utils import *
 import json
 
 
-def generate_dataframe_AGENTS(config):
-    df_agents = pd.DataFrame(generate_dataframe("AGENT", config))
+def generate_dataframe_AGENTS(location, config):
+    df_agents = pd.DataFrame(generate_dataframe(location, config))
 
     for i in range(0, len(config.columns_agents)):
         df_agents.insert(i, config.columns_agents[i], "")

@@ -4,8 +4,8 @@ import json
 from src.utils.utils import *
 pd.set_option('display.max_colwidth', None)
 
-def generate_dataframe_hva(config):
-    df_hva = pd.DataFrame(generate_dataframe("HVA", config))
+def generate_dataframe_hva(location, config):
+    df_hva = pd.DataFrame(generate_dataframe(location, config))
 
     for i in range(0, len(config.columns_obj)):
         df_hva.insert(i, config.columns_obj[i], "")
@@ -23,6 +23,8 @@ def generate_dataframe_hva(config):
         fetch_owner(df_hva, i, j)
         fetch_objectname(df_hva, i, j)
         fetch_objectnaam_id(df_hva, i, j)
+        fetch_objectnumber(df_hva, i, j)
+
         fetch_provenance(df_hva, i, j)
         fetch_creators(df_hva, i, j)
         fetch_creator_role(df_hva,i ,j)

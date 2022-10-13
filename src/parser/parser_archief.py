@@ -2,8 +2,8 @@ from src.utils.utils import *
 import json
 import pandas as pd
 
-def generate_dataframe_ARCH(config):
-    df_archief = pd.DataFrame(generate_dataframe("ARCH", config))
+def generate_dataframe_ARCH(location, config):
+    df_archief = pd.DataFrame(generate_dataframe(location, config))
 
     for i in range(0, len(config.columns_obj)):
         df_archief.insert(i, config.columns_obj[i], "")
@@ -19,6 +19,7 @@ def generate_dataframe_ARCH(config):
 
         fetch_title(df_archief, i, j)
         fetch_owner(df_archief, i, j)
+        fetch_objectnumber(df_archief, i, j)
         fetch_objectname(df_archief, i, j)
         fetch_provenance(df_archief, i, j)
 

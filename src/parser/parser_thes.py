@@ -2,9 +2,9 @@ from src.utils.utils import *
 import json
 
 
-def generate_dataframe_thesaurus(config):
+def generate_dataframe_thesaurus(location, config):
     """generate dataframe and populate with data from LDES"""
-    df_thes = pd.DataFrame(generate_dataframe("THES", config))
+    df_thes = pd.DataFrame(generate_dataframe(location, config))
 
     for i in range(0, len(config.columns_thes)):
         df_thes.insert(i, config.columns_thes[i], "")
