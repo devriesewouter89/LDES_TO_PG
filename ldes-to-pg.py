@@ -93,15 +93,15 @@ class DownloadCollection(threading.Thread):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(description='return LDES for chosen DCAT')
-    parser.add_argument("--fetch", metavar="fetch", nargs='*', help="choose collections to fetch",
-                        choices=["dmg", "im", "stam", "hva",
+    parser.add_argument("--process", metavar="process", nargs='*', help="choose collections to process",
+                        choices=["dmg", "industriemuseum", "stam", "hva",
                                  "archiefgent", "thesaurus", "AGENT"], default=["dmg"])
     parser.add_argument("--timestamp", default="2021-07-14T15:48:12.309Z")
     parser.add_argument("--result", choices=["pg", "csv", "xlsx"], default="csv")
     parser.add_argument("--download", "-d", action=argparse.BooleanOptionalAction)
     args = parser.parse_args()
 
-    choice = args.fetch
+    choice = args.process
     # initialize the config file
     _config = Config(timestamp=args.timestamp)
     # IM + HVA; laatste maal 28-08
@@ -119,7 +119,6 @@ if __name__ == "__main__":
             tempThread.start()
         for i in threadList:
             i.join()
-
 
     for _location in choice:
         try:
